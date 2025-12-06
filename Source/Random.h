@@ -1,6 +1,9 @@
 ﻿#pragma once
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
+#include <glm/gtx/norm.hpp>
+
 
 #include <cstdlib>
 #include <random>
@@ -43,7 +46,7 @@ namespace random {
     /// <returns>A random integer between min and max (both inclusive)</returns>
     inline int getInt(int min, int max) {
         // Uniform distribution ensures each value in range has equal probability
-        std::uniform_int_distribution<> dist(min, max);
+        std::uniform_int_distribution dist(min, max);
         return dist(generator());
     }
 
@@ -64,7 +67,7 @@ namespace random {
     /// <returns>A random integer from the full distribution range</returns>
     inline int getInt() {
         // Static distribution to avoid recreation overhead
-        static std::uniform_int_distribution<> dist;
+        static std::uniform_int_distribution dist;
         return dist(generator());
     }
 
@@ -109,12 +112,12 @@ namespace random {
         return dist(generator());
     }
 
-    inline glm::vec3 getReal(glm::vec3& min, glm::vec3& max) {
+    inline glm::vec3 getReal(const glm::vec3& min, const glm::vec3& max) {
         return glm::vec3{
             getReal(min.x, max.x),
             getReal(min.y, max.y),
             getReal(min.z, max.z)
-        }
+        };
     }
 
     /// <summary>
@@ -141,5 +144,19 @@ namespace random {
         // Convert polar coordinates to Cartesian coordinates
         // cos(θ) gives x-component, sin(θ) gives y-component
         return glm::vec2{ glm::cos(radians), glm::sin(radians) };
+    }
+
+    inline glm::vec3 inUnitSphere() {
+        glm::vec3 v;
+
+        do {
+            v = getReal(glm::vec3{ -1 }, glm::vec3{ 1 });
+        } while (glm::length2(v) > 1.0f);
+
+        return v;
+    }
+
+    inline glm::vec3 onUnitSphere() {
+        return glm::normalize(inUnitSphere());
     }
 }

@@ -2,6 +2,7 @@
 #include "Framebuffer.h"
 #include "Camera.h"
 #include "Color.h"
+#include "Object.h"
 #include <iostream>
 
 void Scene::Render(Framebuffer& framebuffer, const Camera& camera) {
@@ -16,23 +17,24 @@ void Scene::Render(Framebuffer& framebuffer, const Camera& camera) {
 			point.y = 1 - point.y;
 
 			// get ray from camera
-			ay ray = camera.GetRay(point);
+			Ray ray = camera.GetRay(point);
 			// trace ray
-			raycastHit_t raycastHit;
+			
 			// 0 = min ray distance, 100 = max ray distance
-			color3_t color = Trace(ray, 0, 100, raycastHit);
+			color3_t color = Trace(ray, 0, 100);
 
 			framebuffer.DrawPoint(x, y, ColorConvert(color));
 		}
 	}
 }
 
-void Scene::AddObject(<unique pointer of Object> object) {
+void Scene::AddObject(std::unique_ptr<Object> object) {
 	// add object to objects vector
+	objects.push_back(std::move(object));
 }
 
-color3_t Scene::Trace(const ray_t& ray, float minDistance, float maxDistance, raycastHit_t& raycastHit) {
-
+color3_t Scene::Trace(const Ray& ray, float minDistance, float maxDistance, int maxDepth) {
+	raycastHit raycastHit;
 	bool rayHit = false;
 	float closestDistance = maxDistance;
 
@@ -42,7 +44,7 @@ color3_t Scene::Trace(const ray_t& ray, float minDistance, float maxDistance, ra
 		if (object->Hit(ray, minDistance, closestDistance, raycastHit))	{
 			rayHit = true;
 			// set closest distance to the raycast hit distance (only hit objects closer than closest distance)
-			closestDistance = // raycast hit distance;
+			closestDistance = raycastHit.distance;// raycast hit distance;
 		}
 	}
 

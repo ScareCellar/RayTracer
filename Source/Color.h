@@ -11,11 +11,11 @@ using color4_t = glm::vec4;
 inline SDL_Color ColorConvert(const color4_t& color4)
 {
 	SDL_Color color;
-
-	color.r = 0; // convert color4 to SDL_Color color
-	color.g = 0; // convert color4 to SDL_Color color
-	color.b = 0; // convert color4 to SDL_Color color
-	color.a = 0; // convert color4 to SDL_Color color
+	
+	color.r = (uint8_t)(std::clamp(color4.r, 0.0f, 1.0f) * 255); // convert color4 to SDL_Color color
+	color.g = (uint8_t)(std::clamp(color4.g, 0.0f, 1.0f) * 255); // convert color4 to SDL_Color color
+	color.b = (uint8_t)(std::clamp(color4.b, 0.0f, 1.0f) * 255); // convert color4 to SDL_Color color
+	color.a = (uint8_t)(std::clamp(color4.a, 0.0f, 1.0f) * 255); // convert color4 to SDL_Color color
 
 	return color;
 }
@@ -25,9 +25,9 @@ inline SDL_Color ColorConvert(const color3_t& color3)
 {
 	SDL_Color color;
 
-	color.r = 0; // convert color4 to SDL_Color color
-	color.g = 0; // convert color4 to SDL_Color color
-	color.b = 0; // convert color4 to SDL_Color color
+	color.r = (uint8_t)(std::clamp(color3.r, 0.0f, 1.0f) * 255); // convert color4 to SDL_Color color
+	color.g = (uint8_t)(std::clamp(color3.g, 0.0f, 1.0f) * 255); // convert color4 to SDL_Color color
+	color.b = (uint8_t)(std::clamp(color3.b, 0.0f, 1.0f) * 255); // convert color4 to SDL_Color color
 	color.a = 255;
 
 	return color;
