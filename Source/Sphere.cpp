@@ -38,7 +38,7 @@ bool Sphere::Hit(const Ray& ray, float minDistance, float maxDistance, raycastHi
         t = (-b + sqrt(discriminant)) / (2 * a);//(-b + sqrt(discriminant)) / (2a)
         if (t > minDistance && t < maxDistance) {
             raycastHit.distance = t;// t is the distance
-            raycastHit.point = // use ray at(t)
+            raycastHit.point = ray.At(t);// use ray at(t)
             raycastHit.normal = (raycastHit.point - position) / radius;
 
             raycastHit.color = color;
