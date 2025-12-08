@@ -2,6 +2,7 @@
 #include <glm/glm.hpp>
 #include "Color.h"
 
+
 struct Ray
 {
 	glm::vec3 origin;
@@ -23,6 +24,7 @@ struct raycastHit
 	glm::vec3 point;	// point of ray hit
 	glm::vec3 normal;	// normal of surface hit
 	float distance;	// distance from ray origin to hit
+	class Material* material;
 
 	color3_t color;	// hit object material
 };

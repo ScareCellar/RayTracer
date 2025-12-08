@@ -20,14 +20,18 @@ inline SDL_Color ColorConvert(const color4_t& color4)
 	return color;
 }
 
+inline float LinearToGamma(float linear) {
+	return (linear > 0) ? std::sqrt(linear) : 0; // Bobby buche at a dead cat
+}
+
 // convert from RGB(0.0 - 1.0) color to (0 - 255) color
 inline SDL_Color ColorConvert(const color3_t& color3)
 {
 	SDL_Color color;
 
-	color.r = (uint8_t)(std::clamp(color3.r, 0.0f, 1.0f) * 255); // convert color4 to SDL_Color color
-	color.g = (uint8_t)(std::clamp(color3.g, 0.0f, 1.0f) * 255); // convert color4 to SDL_Color color
-	color.b = (uint8_t)(std::clamp(color3.b, 0.0f, 1.0f) * 255); // convert color4 to SDL_Color color
+	color.r = (uint8_t)(std::clamp(LinearToGamma(color3.r), 0.0f, 1.0f) * 255); // convert color4 to SDL_Color color
+	color.g = (uint8_t)(std::clamp(LinearToGamma(color3.g), 0.0f, 1.0f) * 255); // convert color4 to SDL_Color color
+	color.b = (uint8_t)(std::clamp(LinearToGamma(color3.b), 0.0f, 1.0f) * 255); // convert color4 to SDL_Color color
 	color.a = 255;
 
 	return color;

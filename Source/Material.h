@@ -11,7 +11,7 @@ public:
 
 	// computes material response to incident ray: returns scattered ray direction and attenuation color. 
 	// returns false if ray is absorbed (e.g., emissive materials).
-	virtual bool Scatter(const Ray& incident, const raycastHit& raycastHit, color3_t& attenuation, Ray& scattered) const = 0;
+	virtual bool Scatter(const struct Ray& incident, const struct raycastHit& raycastHit, color3_t& attenuation, struct Ray& scattered) const = 0;
 
 	const color3_t& GetColor() const { return albedo; }
 	virtual color3_t GetEmissive() const { return color3_t{ 0, 0, 0 }; }
