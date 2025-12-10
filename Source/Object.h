@@ -14,7 +14,7 @@ public:
 
 	virtual bool Hit(const Ray& ray, float minDistance, float maxDistance, raycastHit& raycastHit) = 0;
 
-protected:
-	Transform transform;
 	std::shared_ptr<Material> material;
+	Transform transform;
+protected:
 };

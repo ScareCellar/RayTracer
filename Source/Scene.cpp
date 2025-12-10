@@ -26,20 +26,24 @@ void Scene::Render(Framebuffer& framebuffer, const Camera& camera, int numSample
 				// get ray from camera
 				Ray ray = camera.GetRay(point);
 				// trace ray
-				color += Trace(ray, 0, 100);
+				color += Trace(ray, 0.0001f, 100, 20);
 			}
 			// get average color = (color / number samples)
 			color = color/(float)numSamples;
 			framebuffer.DrawPoint(x, y, ColorConvert(color));
 		}
+		std::cout << y << std::endl;
 	}
 }
+
 void Scene::AddObject(std::unique_ptr<Object> object) {
 	// add object to objects vector
 	objects.push_back(std::move(object));
 }
 
 color3_t Scene::Trace(const Ray& ray, float minDistance, float maxDistance, int maxDepth) {
+	if (maxDepth == 0) return color3_t{ 0 };
+
 	raycastHit raycastHit;
 	bool rayHit = false;
 	float closestDistance = maxDistance;
@@ -50,15 +54,22 @@ color3_t Scene::Trace(const Ray& ray, float minDistance, float maxDistance, int 
 		if (object->Hit(ray, minDistance, closestDistance, raycastHit))	{
 			rayHit = true;
 			// set closest distance to the raycast hit distance (only hit objects closer than closest distance)
-			closestDistance = raycastHit.distance;// raycast hit distance;
+			closestDistance = raycastHit.distance;
+			raycastHit.material = object->material.get();// raycast hit distance;
 		}
 	}
 
 	// check if ray hit object
 	if (rayHit)	{
 		// get material color of hit object
-		color3_t color = raycastHit.color;
-		return color;
+		color3_t attenuation;
+		Ray scattered;
+		if (raycastHit.material->Scatter(ray, raycastHit, attenuation, scattered)) {
+			return attenuation * Trace(scattered, minDistance, maxDistance, maxDepth - 1);
+		}
+		else {
+			return raycastHit.material->GetEmissive();
+		}
 	}
 
 	// draw sky colors based on the ray y position
